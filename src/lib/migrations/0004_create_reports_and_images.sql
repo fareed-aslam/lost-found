@@ -1,0 +1,42 @@
+-- Create categories, reports, report_images, and claims tables
+CREATE TABLE IF NOT EXISTS categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS reports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  report_type VARCHAR(50) NOT NULL,
+  item_name VARCHAR(255) NOT NULL,
+  location VARCHAR(255) DEFAULT NULL,
+  report_date DATE DEFAULT NULL,
+  item_status VARCHAR(100) DEFAULT NULL,
+  category_id INT DEFAULT NULL,
+  user_id INT DEFAULT NULL,
+  description TEXT,
+  contact_info VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS report_images (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  report_id INT NOT NULL,
+  url VARCHAR(1024) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (report_id) REFERENCES reports(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS claims (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  report_id INT NOT NULL,
+  claimant_name VARCHAR(255),
+  item_description TEXT,
+  claim_status VARCHAR(50) DEFAULT 'pending',
+  claimant_user_id INT DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (report_id) REFERENCES reports(id) ON DELETE CASCADE,
+  FOREIGN KEY (claimant_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
