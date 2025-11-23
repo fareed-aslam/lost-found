@@ -1,0 +1,1 @@
+ALTER TABLE `users` MODIFY COLUMN `user_type` enum('localUser','admin') NOT NULL;
